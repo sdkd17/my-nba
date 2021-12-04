@@ -1,8 +1,20 @@
 <template>
 	
-	<div>
+	<b-list-group> 
+		<b-list-group-item 
+			v-for="element in generateTeamStats"
+			v-bind:key="element.item" >	
+			<b-row> 
+				<b-col> {{ element.home_team }}</b-col>
+				<b-col> <span class="h5"> {{ items[element.item] }} </span></b-col>
+				<b-col> {{ element.visitor_team }}</b-col>
+			</b-row>
+		</b-list-group-item>
+	</b-list-group>
+
+	<!-- <div>
 		<b-table striped hover :items="generateTeamStats"></b-table>
-	</div>
+	</div> -->
 	
 </template>
 
@@ -11,45 +23,16 @@
 		props: {
 			//stats viene como un array con las estadisticas de los jugadores, quiero mostrar la comparacion de estadisticas por equipo.
 			gameId: String,
-			
 		},
 		data () {
 			return {
-				stats: []
+				stats: [],
+				items: {'fg':'Field Goals','fg3':'3 Pointers', 'ft':'Free Throws', 'ast':'Assists', 'reb':'Total Rebounds','oreb':'Offensive Rebounds', 'dreb':'Defensive Rebounds', 'stl':'Steals', 'blk':'Blocks', 'turnover':'Turnouvers', 'pf': 'Fouls'}
 			}
 		},
-		computed: {
-			// generateTeamStats2: function() {
-			// 	//retorna un objeto/array con las estadisticas calculadas por equipo
-
-			// 	let team_stats = { home_team_name: stats[0].game.home_team_id, home_team: {}, visitor_team_name: stats[0].game.visitor_team_id, visitor_team: {} };
-				
-			// 	team_stats.home_team = {ast:0,blk:0,dreb:0,fg3_pct:0,fg3a:0,fg3m:0,fg_pct:0,fga:0,fgm:0,ft_pct:0,fta:0,ftm:0,oreb:0,pf:0,pts:0,reb:0,stl:0,turnover:0};
-			// 	team_stats.visitor_team = {ast:0,blk:0,dreb:0,fg3_pct:0,fg3a:0,fg3m:0,fg_pct:0,fga:0,fgm:0,ft_pct:0,fta:0,ftm:0,oreb:0,pf:0,pts:0,reb:0,stl:0,turnover:0}
-
-			// 	//calcular la suma total de puntos de todos los jugadores de un mismo equipo
-			// 	stats.forEach( stat_item => {
-			// 		Object.keys(team_stats.home_team).forEach( key => {
-			// 			if (stat_item.player.team_id === stat_item.game.home_team_id) {
-			// 				team_stats.home_team[key] += stat_item[key];
-			// 			} else {
-			// 				team_stats.visitor_team[key] += stat_item[key];
-			// 			}	
-			// 		})
-			// 	})
-
-			// 	team_stats.home_team.fg_pct = Math.trunc((team_stats.home_team.fgm/team_stats.home_team.fga)*100);
-			// 	team_stats.home_team.fg3_pct = Math.trunc((team_stats.home_team.fg3m/team_stats.home_team.fg3a)*100);
-			// 	team_stats.home_team.ft_pct = Math.trunc((team_stats.home_team.ftm/team_stats.home_team.fta)*100);
-			// 	team_stats.visitor_team.fg_pct = Math.trunc((team_stats.visitor_team.fgm/team_stats.visitor_team.fga)*100);
-			// 	team_stats.visitor_team.fg3_pct = Math.trunc((team_stats.visitor_team.fg3m/team_stats.visitor_team.fg3a)*100);
-			// 	team_stats.visitor_team.ft_pct = Math.trunc((team_stats.visitor_team.ftm/team_stats.visitor_team.fta)*100);
-			// 	return team_stats;
-			// },
-			
+		computed: {			
 			generateTeamStats: function(){
-				let items = {}
-				// let values = ['ast','blk','dreb','fg3_pct','fg3a','fg3m','fg_pct','fga','fgm','ft_pct','fta','ftm','oreb','pf','pts','reb','stl','turnover']
+				let items = {fg:{item:'fg', home_team:'', visitor_team:''},fg3:{item:'fg3', home_team:'', visitor_team:''}, ft:{item:'ft', home_team:'', visitor_team:''}}
 				const values = ['fga', 'fgm','fg_pct','fg3a', 'fg3m', 'fg3_pct', 'fta', 'ftm', 'ft_pct', 'ast', 'reb', 'oreb', 'dreb', 'stl', 'blk', 'turnover', 'pf']
 				values.forEach( value => {
 					items[value] = {item:value, home_team:0, visitor_team:0};
@@ -64,13 +47,35 @@
 						}		
 					})
 				})
+
+				//esto es horrible, pero es lo que hay
 				items.fg_pct.home_team = Math.trunc((items.fgm.home_team/items.fga.home_team)*100);
 				items.fg3_pct.home_team = Math.trunc((items.fg3m.home_team/items.fg3a.home_team)*100);
 				items.ft_pct.home_team = Math.trunc((items.ftm.home_team/items.fta.home_team)*100);
 				items.fg_pct.visitor_team = Math.trunc((items.fgm.visitor_team/items.fga.visitor_team)*100);
 				items.fg3_pct.visitor_team = Math.trunc((items.fg3m.visitor_team/items.fg3a.visitor_team)*100);
 				items.ft_pct.visitor_team = Math.trunc((items.ftm.visitor_team/items.fta.visitor_team)*100);
-				return Object.values(items);
+
+				items.fg.home_team = `${items.fgm.home_team}/${items.fga.home_team} (${items.fg_pct.home_team})`;
+				items.fg.visitor_team = `${items.fgm.visitor_team}/${items.fga.visitor_team} (${items.fg_pct.visitor_team})`;
+
+				items.fg3.home_team = `${items.fg3m.home_team}/${items.fg3a.home_team} (${items.fg3_pct.home_team})`;
+				items.fg3.visitor_team = `${items.fg3m.visitor_team}/${items.fg3a.visitor_team} (${items.fg3_pct.visitor_team})`;
+
+				items.ft.home_team = `${items.ftm.home_team}/${items.fta.home_team} (${items.ft_pct.home_team})`;
+				items.ft.visitor_team = `${items.ftm.visitor_team}/${items.fta.visitor_team} (${items.ft_pct.visitor_team})`;
+				delete items.fga
+				delete items.fgm
+				delete items.fg_pct
+
+				delete items.fg3a
+				delete items.fg3m
+				delete items.fg3_pct
+
+				delete items.fta
+				delete items.ftm
+				delete items.ft_pct
+				return Object.values(items)
 			}
 		},
 		watch: {

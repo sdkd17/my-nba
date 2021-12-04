@@ -1,29 +1,46 @@
 <template>
-	<b-jumbotron>
-		<template #header> 
-			<b-avatar :src="require(`@/assets/team-logos/${game.visitor_team.name}.png`)">	</b-avatar> 
-			{{game.visitor_team.name}} @ {{game.home_team.name}} 
-			<b-avatar :src="require(`@/assets/team-logos/${game.home_team.name}.png`)">	</b-avatar> 
-		</template>
-		<template #lead> 
-			<span v-if="game.status.includes(':')"> {{game.status}} </span>
-			<span v-else>{{game.visitor_team_score}} {{game.status}} {{game.home_team_score}}</span>
-		</template>
-		<hr class="my-4">
-		
 
-		<div>
-			<b-button 
-				v-b-toggle="`collapse-${game.id}`" 
-				variant="primary"
-				v-on:click="gameId=game.id.toString()">
-					Game Stats
-			</b-button>
+	<b-container class="text-center"> 
+		<b-row> 
+			<b-col> 
+				<b-avatar :src="require(`@/assets/team-logos/${game.visitor_team.name}.png`)">	</b-avatar> 
+				<span  class="h3 m-2"> {{game.visitor_team.name}} </span>
+			</b-col>
+			<b-col> 
+				<span class="h1" size="lg"> @ </span>
+			</b-col>
+			<b-col> 
+				<span	class="h3 m-2">{{game.home_team.name}}</span>
+				<b-avatar :src="require(`@/assets/team-logos/${game.home_team.name}.png`)">	</b-avatar> 
+			</b-col>
+		</b-row>
+
+		<b-row> 
+			<b-col> <span class="h3">{{game.visitor_team_score}}</span> </b-col>
+			<b-col> <span class="h5">{{game.status}}</span></b-col>
+			<b-col> <span class="h3">{{game.home_team_score}}</span></b-col>
+		</b-row>
+
+		<b-row v-show="showGameStatsButton(game.status)"> 
+			<b-col> </b-col>
+			<b-col>
+				<b-button 
+					v-b-toggle="`collapse-${game.id}`" 
+					variant="primary"
+					v-on:click="gameId=game.id.toString()">
+						Game Stats
+				</b-button>
+			</b-col>
+			<b-col> </b-col>
+		</b-row>
+		<b-row> 
+			<b-col>
 			<b-collapse v-bind:id="`collapse-${game.id}`" class="mt-2">
 				<TeamComparison v-bind:gameId="gameId"/>
 			</b-collapse>
-		</div>
-	</b-jumbotron>
+		</b-col>
+		</b-row>
+	</b-container>
 </template>
 
 <script>
@@ -41,6 +58,11 @@
 				gameId:''
 			}
 		},
+		methods:{
+			showGameStatsButton: function(status){
+				return !status.includes("ET");
+			}
+		}
 		
 	}
 </script>

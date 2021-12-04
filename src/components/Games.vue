@@ -1,10 +1,15 @@
 <template>
-	<b-container> 
+	<b-container fluid> 
 		<b-row> 
-			<b-form inline> 
-				<b-form-datepicker id="input-date" v-model="inputs.date" class="mb-2 mr-sm-2 mb-sm-0"> </b-form-datepicker>
-				<b-button variant="primary" v-on:click="getGames">Get Games</b-button>
-			</b-form>
+			<b-col> </b-col>
+			<b-col>
+				<b-form inline> 
+					<b-form-datepicker id="input-date" v-model="inputs.date" :min="min" class="mb-2 mr-sm-2 mb-sm-0"> </b-form-datepicker>
+					<b-button variant="primary" v-on:click="getGames">Get Games</b-button>
+				</b-form>
+			</b-col>
+			<b-col> </b-col>
+			
 		</b-row>
 
 		<b-row>	
@@ -15,7 +20,6 @@
 						v-bind:key="game.id"> 
 							<GameJumbo 
 								v-bind:game="game"
-								
 							/>
 					</b-list-group-item>
 				</b-list-group>
@@ -33,22 +37,54 @@ export default {
 	},
 	data () {
 		const today = new Date();
-		const todayString = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+		const todayString = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+		const minDate = new Date(2021,9,19); //start of the season
 		return {
 			inputs:{
 				date: todayString
 			},
-			games: []
+			games: [],
+			min: minDate
 		}
 	},
 	methods: {
 		getGames: function() {
 			fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${this.inputs.date}`, {method: 'get'}).
 				then(response => {
-					return response.json()
+					if (response.status >= 200 && response.status <= 299) {
+						return response.json();
+					} else {
+						throw Error(response.statusText);
+					}
 				}).then(jsonData => {
-					this.games = jsonData.data;
-				});  
+					if (this.inputs.date > this.today) {
+						this.games = jsonData.data.sort( this.compareStatus);
+					} else {
+						this.games = jsonData.data;
+					}
+				}).catch( (error) => {
+					console.log(error);
+				}) ;  
+		},
+		compareStatus: function(a,b) {
+			const re = /^(\d{1,2}):(\d\d)/;
+			const matchA =  a.status.match(re);
+			const matchB =  b.status.match(re);
+			if (parseInt(matchA[1]) < parseInt(matchB[1])) {
+				return -1;
+			}
+			if (parseInt(matchA[1]) > parseInt(matchB[1])) {
+				return 1;
+			}
+			if (parseInt(matchA[1]) == parseInt(matchB[1])) {
+				if ( (parseInt(matchA[2]) < parseInt(matchB[2])) ) {
+					return -1;
+				} 
+				if ( (parseInt(matchA[2]) > parseInt(matchB[2])) ) {
+					return 1;
+				}
+			}
+			return 0;
 		}
 	},
 	created() {
