@@ -14,7 +14,7 @@
 <script>
 	export default {
 		props: {
-			games: Object,
+			games: Array,
 			loading: Boolean
 		},
 		data(){
@@ -55,39 +55,35 @@
 			}
 		},
 		watch: {
-			loading: function () {
-				// console.log(this.games)
-				if (!this.loading) {
-					let local_table = {};
-					for (let teamId = 1; teamId <= 30;teamId++) {
-						local_table[teamId] = {'team': null, 'w':0, 'l':0, 'homeW':0, 'homeL':0, 'roadW':0, 'roadL':0};
-						this.games[teamId].forEach( game => {
-							if (game.home_team.id === teamId){
-								if (local_table[teamId].team == null) {
-									local_table[teamId].team = game.home_team.abbreviation;
-								}
-								if (game.home_team_score > game.visitor_team_score) {
-									local_table[teamId].w++;
-									local_table[teamId].homeW++
-								} else {
-									local_table[teamId].l++;
-									local_table[teamId].homeL++;
-								}
-							} else {
-								if (game.visitor_team_score > game.home_team_score) {
-									local_table[teamId].w++;
-									local_table[teamId].roadW++
-								} else {
-									local_table[teamId].l++;
-									local_table[teamId].roadL++;
-								}
-							}
-						})
+			loading: function() {
+				//returns an array {team: abbreviation, w:0, l:0, homeW:0, homeL:0, roadW:0, roadL:0}
+					let items_helper = {};
+					for (let teamId = 1; teamId <= 30; teamId++) {
+						items_helper[teamId] = {'team': null, 'w':0, 'l':0, 'homeW':0, 'homeL':0, 'roadW':0, 'roadL':0};
 					}
-					this.table = Object.values(local_table); 	
-				}
-				
-				
+					
+					this.games.forEach( game => {
+						if (items_helper[game.home_team.id].team == null) {
+							items_helper[game.home_team.id].team = game.home_team.abbreviation
+						}
+						
+						if (game.home_team_score > game.visitor_team_score) {
+							// home team won the game	
+							items_helper[game.home_team.id].w++;
+							items_helper[game.home_team.id].homeW++;
+							items_helper[game.visitor_team.id].l++;
+							items_helper[game.visitor_team.id].roadL++;
+						} else {
+							//visitor team won the game
+							items_helper[game.visitor_team.id].w++;
+							items_helper[game.visitor_team.id].roadW++;
+							items_helper[game.home_team.id].l++;
+							items_helper[game.home_team.id].homeL++;
+						}
+					
+					})
+					// console.log(items_helper);
+					this.table = Object.values(items_helper);
 			}
 		}
 	}
