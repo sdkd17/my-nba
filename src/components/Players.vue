@@ -25,7 +25,8 @@
 					head-variant="dark"
 					selectable
 					select-mode="single"
-					:items="setItems" 
+					:items="setItems"
+					:fields="fields" 
 					@row-selected="onRowSelected">
 				</b-table>
 			</b-col>
@@ -79,6 +80,7 @@
 				inputs: {
 					playerName: ''  
 				},
+				fields: ['name'],
 				players:[],           //info of all the players
 				selected: null,       //row of the table selected
 				playerSelected: null, //selected player's info
@@ -112,7 +114,7 @@
 						this.players.push(...jsonData.data);
 						total_pages = jsonData.meta.total_pages
 						current_page++;
-						console.log(current_page);
+						// console.log(current_page);
 					} else {
 						console.log(response.status, response.statusText);
 						error = true;
@@ -127,6 +129,7 @@
 			},
 			onRowSelected: async function(row){
 				//row = {name:'', id:''}, selected row from the table
+				// console.log(row);
 				this.selected = row[0];
 				this.playerSelected = this.players.find( player => player.id === this.selected.id);
 
