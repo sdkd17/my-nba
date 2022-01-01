@@ -22,11 +22,11 @@
 	export default {
 		props: {
 			//stats viene como un array con las estadisticas de los jugadores, quiero mostrar la comparacion de estadisticas por equipo.
-			gameId: String,
+			gameStats: Array
 		},
 		data () {
 			return {
-				stats: [],
+				// stats: [],
 				items: {'fg':'Field Goals','fg3':'3 Pointers', 'ft':'Free Throws', 'ast':'Assists', 'reb':'Total Rebounds','oreb':'Offensive Rebounds', 'dreb':'Defensive Rebounds', 'stl':'Steals', 'blk':'Blocks', 'turnover':'Turnouvers', 'pf': 'Fouls'}
 			}
 		},
@@ -37,8 +37,8 @@
 				values.forEach( value => {
 					items[value] = {item:value, home_team:0, visitor_team:0};
 				})
-				
-				this.stats.forEach( stat_item => {
+				// console.log(this.gameStats);
+				this.gameStats.forEach( stat_item => {
 					values.forEach( value => {
 						if (stat_item.player.team_id === stat_item.game.home_team_id) {
 							items[value].home_team += stat_item[value]
@@ -78,17 +78,17 @@
 				return Object.values(items)
 			}
 		},
-		watch: {
-			gameId: function(newGameId) {
-				// console.log(newGameId + ' - ' + oldGameId);
-				fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${newGameId}&per_page=40`, {method: 'get'}).
-				then(response => {
-					return response.json()
-				}).then(jsonData => {
-					this.stats = jsonData.data;
-				});
+		// watch: {
+		// 	gameId: function(newGameId) {
+		// 		// console.log(newGameId + ' - ' + oldGameId);
+		// 		fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${newGameId}&per_page=40`, {method: 'get'}).
+		// 		then(response => {
+		// 			return response.json()
+		// 		}).then(jsonData => {
+		// 			this.stats = jsonData.data;
+		// 		});
 				
-			}
-		}
+		// 	}
+		// }
 	}
 </script>

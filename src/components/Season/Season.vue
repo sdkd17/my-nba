@@ -1,27 +1,41 @@
 <template>
 	<b-container fluid>
+		<b-container>
+			<b-row> 
+				<b-col>	</b-col>
+				<b-col>	
+					<b-button-group class="m-3" size="lg"> 
+						<b-button variant="primary" :pressed="sortBy === 0" v-on:click="sortBy = 0"> League </b-button>
+						<b-button variant="primary" :pressed="sortBy === 1" v-on:click="sortBy = 1"> Conference </b-button>
+						<b-button variant="primary" :pressed="sortBy === 2" v-on:click="sortBy = 2"> Division </b-button>
+					</b-button-group>		
+				</b-col>
+				<b-col>	</b-col>
+			</b-row>
+		</b-container>
 		
-		<div>
-			<LeagueTable
+		<LeagueTable
 				v-bind:games="games"
-				v-bind:loading="loading" />
-		</div>
+				v-bind:loading="loading"
+				v-bind:sortBy="sortBy" 
+		/>
 	</b-container>
 </template>
 
 <script>
 	// const y = new Date().getFullYear();
 	import LeagueTable from './LeagueTable.vue';
-
+	
 	export default {
 		components: {
-			LeagueTable
+			LeagueTable,
 		},
 		data() {
 			return {
 				date: new Date(),
 				games: [],
-				loading: true
+				loading: true,
+				sortBy: 0
 			}
 		},
 		methods: {

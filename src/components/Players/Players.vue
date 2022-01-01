@@ -3,8 +3,8 @@
 		<b-row> 
 			<b-col> </b-col>
 			<b-col> 
-				<b-form inline>
-					<label class="sr-only" for="inline-form-input-name">Write a player's name:</label>
+				<b-form inline class="m-3">
+					<label for="inline-form-input-name">Write a player's name:</label>
 					<b-form-input
 						v-model="inputs.playerName"
 						id="inline-form-input-name"
@@ -102,6 +102,7 @@
 		},
 		methods: {
 			searchPlayer: async function () { //more than 25 players?
+				this.players = [];
 				let error = false;
 				let current_page = 1;
 				let total_pages = 1;

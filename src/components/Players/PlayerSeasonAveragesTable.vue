@@ -1,8 +1,6 @@
 <template>
 	<div>
-		<b-table :fields="fields" :items="averages">
-		</b-table>	
-		
+		<b-table :fields="fields" :items="averages"> </b-table>	
 	</div>
 </template>
 

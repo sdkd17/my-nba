@@ -2,10 +2,10 @@
 	<b-container fluid> 
 		<b-row> 
 			<b-col> </b-col>
-			<b-col>
-				<b-form inline> 
-					<b-form-datepicker id="input-date" v-model="inputs.date" :min="min" class="mb-2 mr-sm-2 mb-sm-0"> </b-form-datepicker>
-					<b-button variant="primary" v-on:click="getGames">Get Games</b-button>
+			<b-col class="col-10">
+				<b-form class="m-3">
+					<b-form-datepicker id="input-date" v-model="date" :min="min" class="mb-2 mr-sm-2 mb-sm-0"> </b-form-datepicker>
+					<!-- <b-button variant="primary" v-on:click="getGames">Get Games</b-button> -->
 				</b-form>
 			</b-col>
 			<b-col> </b-col>
@@ -13,9 +13,9 @@
 		</b-row>
 
 		<b-row>	
-			<b-col cols="8" offset="2"> 
+			<b-col cols="10" offset="1"> 
 				<b-list-group>
-					<b-list-group-item 
+					<b-list-group-item variant="secondary"
 						v-for="game in games"
 						v-bind:key="game.id"> 
 							<GameJumbo 
@@ -40,16 +40,21 @@ export default {
 		const todayString = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
 		const minDate = new Date(2021,9,19); //start of the season
 		return {
-			inputs:{
-				date: todayString
-			},
+			
+			date: todayString,
+			
 			games: [],
 			min: minDate
 		}
 	},
+	watch: {
+		date: function () {
+			this.getGames()
+		}
+	},
 	methods: {
 		getGames: function() {
-			fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${this.inputs.date}`, {method: 'get'}).
+			fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${this.date}`, {method: 'get'}).
 				then(response => {
 					if (response.status >= 200 && response.status <= 299) {
 						return response.json();
@@ -57,7 +62,7 @@ export default {
 						throw Error(response.statusText);
 					}
 				}).then(jsonData => {
-					if (this.inputs.date > this.today) {
+					if (this.date > this.today) {
 						this.games = jsonData.data.sort( this.compareStatus);
 					} else {
 						this.games = jsonData.data;
