@@ -1,17 +1,17 @@
 <template>
 
-	<b-container class="text-center"> 
+	<b-container class="text-center" > 
 		<b-row> 
 			<b-col> 
 				<b-avatar :src="require(`@/assets/team-logos/${game.visitor_team.name}.png`)">	</b-avatar> 
-				<span  class="h3 m-2"> {{game.visitor_team.name}} </span>
+				<span  class="h3 m-2 d-none d-md-block"> {{game.visitor_team.name}} </span>
 			</b-col>
 			<b-col> 
 				<span class="h1" size="lg"> @ </span>
 			</b-col>
 			<b-col> 
-				<span	class="h3 m-2">{{game.home_team.name}}</span>
 				<b-avatar :src="require(`@/assets/team-logos/${game.home_team.name}.png`)">	</b-avatar> 
+				<span	class="h3 m-2 d-none d-md-block">{{game.home_team.name}}</span>
 			</b-col>
 		</b-row>
 
@@ -96,12 +96,34 @@
 					return -1
 				}
 				if (a.team.abbreviation === b.team.abbreviation) {
-					
-					if (a.min < b.min) {
-						return 1
-					}
-					if(a.min > b.min) {
+					const matchA = a.min.match(/(\d{1,2}):(\d{1,2})/)
+					const matchB = b.min.match(/(\d{1,2}):(\d{1,2})/)
+
+					if (matchA != null && matchB != null) { 
+						const minA = parseInt(matchA[1]);
+						const secA = parseInt(matchA[2]);
+						const minB = parseInt(matchB[1]);
+						const secB = parseInt(matchB[2]);
+						if (minA < minB) {
+							return 1
+						}
+						if(minA > minB) {
+							return -1
+						}
+						if (minA === minB) {
+							if (secA < secB) {
+							return 1
+							}
+							if(secA > secB) {
+								return -1
+							}
+						}
+					} 
+					if (matchA != null && matchB == null) { 
 						return -1
+					}
+					if (matchA == null && matchB != null) { 
+						return 1
 					}
 				}
 				return 0

@@ -15,7 +15,7 @@
 		<b-row>	
 			<b-col cols="10" offset="1"> 
 				<b-list-group>
-					<b-list-group-item variant="secondary"
+					<b-list-group-item variant="light"
 						v-for="game in games"
 						v-bind:key="game.id"> 
 							<GameJumbo 

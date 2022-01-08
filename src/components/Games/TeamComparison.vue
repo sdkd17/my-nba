@@ -4,11 +4,13 @@
 		<b-list-group-item 
 			v-for="element in generateTeamStats"
 			v-bind:key="element.item" >	
+			
 			<b-row> 
-				<b-col> {{ element.home_team }}</b-col>
+				<b-col> {{ element.home_team }} </b-col>
 				<b-col> <span class="h5"> {{ items[element.item] }} </span></b-col>
 				<b-col> {{ element.visitor_team }}</b-col>
 			</b-row>
+	
 		</b-list-group-item>
 	</b-list-group>
 
@@ -56,14 +58,14 @@
 				items.fg3_pct.visitor_team = Math.trunc((items.fg3m.visitor_team/items.fg3a.visitor_team)*100);
 				items.ft_pct.visitor_team = Math.trunc((items.ftm.visitor_team/items.fta.visitor_team)*100);
 
-				items.fg.home_team = `${items.fgm.home_team}/${items.fga.home_team} (${items.fg_pct.home_team})`;
-				items.fg.visitor_team = `${items.fgm.visitor_team}/${items.fga.visitor_team} (${items.fg_pct.visitor_team})`;
+				items.fg.home_team = `${items.fgm.home_team}/${items.fga.home_team} (${items.fg_pct.home_team}%)`;
+				items.fg.visitor_team = `${items.fgm.visitor_team}/${items.fga.visitor_team} (${items.fg_pct.visitor_team}%)`;
 
-				items.fg3.home_team = `${items.fg3m.home_team}/${items.fg3a.home_team} (${items.fg3_pct.home_team})`;
-				items.fg3.visitor_team = `${items.fg3m.visitor_team}/${items.fg3a.visitor_team} (${items.fg3_pct.visitor_team})`;
+				items.fg3.home_team = `${items.fg3m.home_team}/${items.fg3a.home_team} (${items.fg3_pct.home_team}%)`;
+				items.fg3.visitor_team = `${items.fg3m.visitor_team}/${items.fg3a.visitor_team} (${items.fg3_pct.visitor_team}%)`;
 
-				items.ft.home_team = `${items.ftm.home_team}/${items.fta.home_team} (${items.ft_pct.home_team})`;
-				items.ft.visitor_team = `${items.ftm.visitor_team}/${items.fta.visitor_team} (${items.ft_pct.visitor_team})`;
+				items.ft.home_team = `${items.ftm.home_team}/${items.fta.home_team} (${items.ft_pct.home_team}%)`;
+				items.ft.visitor_team = `${items.ftm.visitor_team}/${items.fta.visitor_team} (${items.ft_pct.visitor_team}%)`;
 				delete items.fga
 				delete items.fgm
 				delete items.fg_pct

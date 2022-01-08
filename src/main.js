@@ -21,6 +21,8 @@ Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 
 const routes = [
+
+  {path:'/', component: Games},
   {path:'/games', component: Games},
   {path:'/season', component: Season},
   {path:'/players', component: Players}

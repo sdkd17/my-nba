@@ -1,14 +1,14 @@
 <template>
 	<b-container>	
-		<b-table striped sticky-heder responsive 
+		<b-table striped sticky-heder responsive outlined 
 			:fields="fields" 
 			:items="gameStats"
 			table-variant="light">
 			<template #cell(player)="data">
-				<h6 class="font-weight-lighter"> {{data.item.player.last_name}}, {{data.item.player.first_name}} </h6>
+				<span class="font-weight-lighter"> {{data.item.player.last_name}}, {{data.item.player.first_name}} </span>
 			</template>
 			<template #cell(team)="data">
-				{{data.item.team.abbreviation}}
+				<span class="font-weight-bold"> {{data.item.team.abbreviation}} </span>
 			</template>
 		</b-table>
 	</b-container>
